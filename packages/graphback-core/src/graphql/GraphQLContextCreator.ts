@@ -2,7 +2,7 @@ import { parse, visit } from 'graphql';
 import { InputModelTypeContext } from '../api/ContextTypes'
 import { GraphbackCRUDGeneratorConfig } from "../api/GraphbackCRUDGeneratorConfig";
 import { applyGeneratorDirectives } from './directives'
-import { filterInterfaceTypes, filterObjectExtensions, filterObjectTypes } from './graphqlUtils';
+import { filterInterfaceTypes, filterObjectExtensions, filterObjectTypes, filterScalars } from './graphqlUtils';
 
 import { InputContextCreator } from '../api';
 import { inputTypeVisitor } from './InputTypeVisitor';
@@ -25,9 +25,10 @@ export const graphQLInputContext: InputContextCreator = {
     const context = applyDefaultConfig(schemaDef, defaultConfig)
     const interfaces = filterInterfaceTypes(context)
     const finalTypes = applyExtensionsToOriginalTypes(context)
+    const scalars = filterScalars(context)
 
-    return [...finalTypes, ...interfaces]
-
+    // TODO this makes no sense we should return different context object
+    return [...finalTypes, ...interfaces, ...scalars]
   }
 }
 
